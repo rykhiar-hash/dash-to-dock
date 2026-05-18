@@ -532,7 +532,24 @@ export const DockDash = GObject.registerClass({
         const item = new DockDashItemContainer(this._position);
         item.setChild(appIcon);
 
-        appIcon.connectObject('notify::hover', a => this._ensureItemVisibility(a), this);
+        appIcon.connectObject('notify::hover', a => {
+    this._ensureItemVisibility(a);
+    if (a.hover) {
+        a.ease({
+            scale_x: 1.3,
+            scale_y: 1.3,
+            duration: 150,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        });
+    } else {
+        a.ease({
+            scale_x: 1.0,
+            scale_y: 1.0,
+            duration: 150,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        });
+    }
+}, this);
         appIcon.connectObject('clicked', actor => {
             ensureActorVisibleInScrollView(this._scrollView, actor);
         }, this);
